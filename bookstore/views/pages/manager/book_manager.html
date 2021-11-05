@@ -4,6 +4,21 @@
 <meta charset="UTF-8">
 <title>图书管理</title>
 <link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+	<script>
+		$(function (){
+			// bond delete
+			$(".deleteBook").click(function (){
+				var title = $(this).attr("id");
+			/*	var flag = confirm("Are U Sure? delete <"+title+">")
+				if(!flag) {
+					return false;
+				}*/
+				return confirm("Are U Sure? delete <"+title+">");
+			});
+		})
+		//alert($);
+	</script>
 </head>
 <body>
 	
@@ -12,7 +27,7 @@
 			<span class="wel_word">图书管理系统</span>
 			<div>
 				<a href="/pages/manager/book_manager.html">图书管理</a>
-				<a href="/">返回商城</a>
+				<a href="/entry">返回商城</a>
 			</div>
 	</div>
 	
@@ -25,47 +40,18 @@
 				<td>销量</td>
 				<td>库存</td>
 				<td colspan="2">操作</td>
-			</tr>		
+			</tr>
+			{{range .Books}}
 			<tr>
-				<td>时间简史</td>
-				<td>20.00</td>
-				<td>霍金</td>
-				<td>200</td>
-				<td>400</td>
-				<td><a href="/pages/manager/book_edit.html">修改</a></td>
-				<td><a href="#">删除</a></td>
-			</tr>	
-			
-			<tr>
-				<td>时间简史</td>
-				<td>20.00</td>
-				<td>霍金</td>
-				<td>200</td>
-				<td>400</td>
-				<td><a href="book_edit.html">修改</a></td>
-				<td><a href="#">删除</a></td>
-			</tr>	
-			
-			<tr>
-				<td>时间简史</td>
-				<td>20.00</td>
-				<td>霍金</td>
-				<td>200</td>
-				<td>400</td>
-				<td><a href="book_edit.html">修改</a></td>
-				<td><a href="#">删除</a></td>
-			</tr>	
-			
-			<tr>
-				<td>时间简史</td>
-				<td>20.00</td>
-				<td>霍金</td>
-				<td>200</td>
-				<td>400</td>
-				<td><a href="book_edit.html">修改</a></td>
-				<td><a href="#">删除</a></td>
-			</tr>	
-			
+				<td>{{.Title}}</td>
+				<td>{{.Price}}</td>
+				<td>{{.Author}}</td>
+				<td>{{.Sales}}</td>
+				<td>{{.Stock}}</td>
+				<td><a href="/toUpdateBookPage?bookId={{.ID}}">修改</a></td>
+				<td><a id="{{.Title}}" class="deleteBook" href="/deleteBook?bookId={{.ID}}">删除</a></td>
+			</tr>
+			{{end}}
 			<tr>
 				<td></td>
 				<td></td>
@@ -73,14 +59,35 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><a href="/pages/manager/book_edit.html">添加图书</a></td>
+				<td><a href="/toUpdateBookPage">添加图书</a></td>
 			</tr>	
 		</table>
+
+		<div id="page_nav">
+			{{if .IsHasPrev}}
+			<a href="/getPageBooks">首页</a>
+			<a href="/getPageBooks?pageNo={{.GetPrevPageNo}}">上一页</a>
+			{{end}}
+			当前是第{{.PageNo}}页,共{{.TotalPageNo}}页，共{{.TotalRecord}}条记录
+			{{if .IsHasNext}}
+			<a href="/getPageBooks?pageNo={{.GetNextPageNo}}">下一页</a>
+			<a href="/getPageBooks?pageNo={{.TotalPageNo}}">末页</a>
+			{{end}}
+			<input value={{.PageNo}} name="pn" id="pn_input"/>页
+			<input type="button" value="确定" id="sub">
+			<script>
+				$("#sub").click(function () {
+					var pageNo = $("#pn_input").val();
+					location = "/getPageBooks?pageNo=" + pageNo
+				})
+			</script>
+		</div>
+
 	</div>
 	
 	<div id="bottom">
 		<span>
-			尚硅谷书城.Copyright &copy;2015
+			Copyright &copy;2021
 		</span>
 	</div>
 </body>
