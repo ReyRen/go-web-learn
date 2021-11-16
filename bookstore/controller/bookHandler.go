@@ -3,6 +3,7 @@ package controller
 import (
 	"go-web-learn/bookstore/dao"
 	"go-web-learn/bookstore/model"
+	"go-web-learn/bookstore/utils"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -97,6 +98,48 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	page, _ := dao.GetPageBooks(pageNo)
+
+	t := template.Must(template.ParseFiles("bookstore/views/index.html"))
+	t.Execute(w, page)
+}
+
+func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
+	var page *model.Page
+
+	pageNo := r.FormValue("pageNo")
+	minPrice := r.FormValue("min")
+	maxPrice := r.FormValue("max")
+
+	if minPrice == "" && maxPrice == "" {
+		page, _ = dao.GetPageBooks(pageNo)
+	} else {
+
+		if pageNo == "" {
+			pageNo = "1"
+		}
+
+		page, _ = dao.GetPageBooksByPrice(pageNo, minPrice, maxPrice)
+		page.MinPrice = minPrice
+		page.MaxPrice = maxPrice
+	}
+
+	//get cookie
+	/*cookie, _ := r.Cookie("user")
+	if cookie != nil {
+		cookieValue := cookie.Value
+		session, _ := dao.GetSessionById(cookieValue)
+		if session.UserID > 0 {
+			// already login
+			page.IsLogin = true
+			page.Username = session.UserName
+		}
+	}*/
+	flag, userName := utils.IsLogin(r) // true is already login, false is not logged
+	if flag {
+		// already login
+		page.IsLogin = true
+		page.Username = userName
+	}
 
 	t := template.Must(template.ParseFiles("bookstore/views/index.html"))
 	t.Execute(w, page)

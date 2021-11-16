@@ -13,7 +13,8 @@ func TestBook(t *testing.T) {
 	//t.Run("Delete book:", testDeleteBook)
 	//t.Run("Get book:", testGetBookById)
 	//t.Run("Update book:", testUpdateBook)
-	t.Run("Get page books:", testGetPageBooks)
+	//t.Run("Get page books:", testGetPageBooks)
+	t.Run("Get page books by price:", testGetPageBooksByPrice)
 }
 
 func testGetBooks(t *testing.T) {
@@ -58,5 +59,9 @@ func testUpdateBook(t *testing.T) {
 
 func testGetPageBooks(t *testing.T) {
 	page, _ := GetPageBooks("2")
+	fmt.Println(page.Books[0].Title)
+}
+func testGetPageBooksByPrice(t *testing.T) {
+	page, _ := GetPageBooksByPrice("1", "10", "30")
 	fmt.Println(page.Books[0].Title)
 }

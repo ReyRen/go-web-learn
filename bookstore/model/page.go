@@ -6,6 +6,11 @@ type Page struct {
 	PageSize    int64 // count displayed in each page
 	TotalPageNo int64 // total pages
 	TotalRecord int64 // total records
+	MaxPrice    string
+	MinPrice    string
+
+	IsLogin  bool
+	Username string
 }
 
 // isHasPrev

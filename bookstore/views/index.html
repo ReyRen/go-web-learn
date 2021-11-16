@@ -11,18 +11,30 @@
 	<div id="header">
 			<img class="logo_img" alt="" src="/static/img/logo.gif" >
 			<span class="wel_word">网上书城</span>
+			{{.if .IsLogin}}
+			<div>
+				<span>欢迎<span class="um_span">{{.Username}}</span>光临书城</span>
+				<a href="/pages/cart/cart.html">购物车</a>
+				<a href="/logout">注销</a>&nbsp;&nbsp;
+				<a href="/entry">返回</a>
+			</div>
+			{{else}}
 			<div>
 				<a href="pages/user/login.html">登录</a> | 
 				<a href="pages/user/regist.html">注册</a> &nbsp;&nbsp;
 				<a href="pages/cart/cart.html">购物车</a>
 				<a href="pages/manager/manager.html">后台管理</a>
 			</div>
+			{{end}}
 	</div>
 	
 	<div id="main">
 		<div id="book">
 			<div class="book_cond">
-				价格：<input type="text" name="min"> 元 - <input type="text" name="max"> 元 <button>查询</button>
+				<form action="/getPageBooksByPrice" method="post"
+					价格：<input type="text" name="min"> 元 -
+					<input type="text" name="max"> 元 <button>查询</button>
+				</form>
 			</div>
 			<div style="text-align: center">
 				<span>您的购物车中有3件商品</span>
@@ -66,13 +78,13 @@
 
 		<div id="page_nav">
 			{{if .IsHasPrev}}
-			<a href="/entry">首页</a>
-			<a href="/entry?pageNo={{.GetPrevPageNo}}">上一页</a>
+			<a href="/getPageBooksByPrice?min={{.MinPrice}}&max={{.MaxPrice}}">首页</a>
+			<a href="/getPageBooksByPrice?pageNo={{.GetPrevPageNo}}&min={{.MinPrice}}&max={{.MaxPrice}}">上一页</a>
 			{{end}}
 			当前是第{{.PageNo}}页,共{{.TotalPageNo}}页，共{{.TotalRecord}}条记录
 			{{if .IsHasNext}}
-			<a href="/entry?pageNo={{.GetNextPageNo}}">下一页</a>
-			<a href="/entry?pageNo={{.TotalPageNo}}">末页</a>
+			<a href="/getPageBooksByPrice?pageNo={{.GetNextPageNo}}&min={{.MinPrice}}&max={{.MaxPrice}}">下一页</a>
+			<a href="/getPageBooksByPrice?pageNo={{.TotalPageNo}}&min={{.MinPrice}}&max={{.MaxPrice}}">末页</a>
 			{{end}}
 			<input value={{.PageNo}} name="pn" id="pn_input"/>页
 			<input type="button" value="确定" id="sub">
